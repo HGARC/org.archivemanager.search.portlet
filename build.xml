@@ -1,0 +1,40 @@
+<project name="org.archivemanager.search.portlet" basedir="." default="build-deploy">
+	<property name="deploy.dirs" value="Y:/BUPortal/deploy,C:/build" />
+	<property name="module.version" value="3.0.0" />
+	<property name="dist.dir" value="target" />
+	<property name="modules.dir" value="/opt/programming/ArchiveManager/portal/3.0" />
+	
+	<import file="../../build-common.xml"/>
+	
+	<target name="copy-dependencies">
+		<condition property="maven.repo.local" value="${maven.repo.local}" else="${user.home}/.m2/repository">
+			<isset property="maven.repo.local"/>
+		</condition>           
+		<echo>maven.repo.local=${maven.repo.local}</echo>		
+		<!--copy file="${maven.repo.local}/org/heed/openapps/org.heed.openapps.core.service/3.0.0/org.heed.openapps.core.service-3.0.0.jar" todir="src/main/webapp/WEB-INF/lib" /-->
+	</target>
+	<target name="build-deploy">
+		<antcall target="copy-dependencies" />
+		<antcall target="deploy" />
+	</target>
+	<target name="deploy" depends="mvn package">
+		<copy todir="../../../dist" file="./target/archivemanager-search-portlet-3.0.0.war" />
+		<for list="${deploy.dirs}" param="dir">
+			<sequential>
+				<copy todir="@{dir}" file="./target/archivemanager-search-portlet-3.0.0.war" />
+			</sequential>
+		</for>
+	</target>
+	<target name="copy-apps">
+		<delete dir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/CollectionManager" />
+		<delete dir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/DataManager" />
+		<mkdir dir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/CollectionManager" />
+		<mkdir dir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/DataManager" />
+		<copy todir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/CollectionManager">
+			<fileset dir="${modules.dir}/org.archivemanager.collections.web/target/org.archivemanager.collections.web-3.0.0/CollectionManager" />
+		</copy>
+		<copy todir="${modules.dir}/org.archivemanager.search.portlet/src/main/webapp/js/DataManager">
+			<fileset dir="${modules.dir}/org.archivemanager.data.web/target/org.archivemanager.data.web-1.0.0/DataManager" />
+		</copy>
+	</target>
+</project>

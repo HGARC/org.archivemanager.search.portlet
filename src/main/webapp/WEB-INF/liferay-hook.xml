@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
+	
+<hook>
+	<language-properties>content/Language.properties</language-properties>
+	<custom-jsp-dir>/jsp</custom-jsp-dir>
+	
+	<servlet-filter>
+    	<servlet-filter-name>rest-filter</servlet-filter-name>
+    	<servlet-filter-impl>org.archivemanager.portal.auth.RestAuthFilter</servlet-filter-impl>
+    </servlet-filter>
+    
+    <servlet-filter-mapping>
+    	<servlet-filter-name>rest-filter</servlet-filter-name>
+    	<url-pattern>/delegate/service/*</url-pattern>
+    </servlet-filter-mapping>
+    	
+</hook>

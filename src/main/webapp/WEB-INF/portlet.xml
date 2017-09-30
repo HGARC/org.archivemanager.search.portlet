@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
+	<portlet>
+		<portlet-name>archivemanager-self-service</portlet-name>
+		<display-name>ArchiveManager Self Service</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.personalization.SelfServicePortlet</portlet-class>		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>Self Service</title>
+			<short-title>Self Service</short-title>
+			<keywords>Self Service</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-user-space</portlet-name>
+		<display-name>ArchiveManager User Space</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.personalization.UserSpacePortlet</portlet-class>		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>User Space</title>
+			<short-title>User Space</short-title>
+			<keywords>User Space</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-user-signin</portlet-name>
+		<display-name>ArchiveManager User SignIn</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.personalization.SignInPortlet</portlet-class>		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>User SignIn</title>
+			<short-title>User SignIn</short-title>
+			<keywords>User SignIn</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-search</portlet-name>
+		<display-name>ArchiveManager Search</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.SearchPortlet</portlet-class>		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>Search Results</title>
+			<short-title>Search Results</short-title>
+			<keywords>Search Results</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-display</portlet-name>
+		<display-name>archivemanager-display</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.DisplayPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Search Display</title>
+			<short-title>Search Display</short-title>
+			<keywords>Search Display</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-associations</portlet-name>
+		<display-name>archivemanager-associations</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.AssociationsPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Search Associations</title>
+			<short-title>Search Associations</short-title>
+			<keywords>Search Associations</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-attributes</portlet-name>
+		<display-name>archivemanager-attributes</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.AttributeDisplayPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Search Attributes</title>
+			<short-title>Search Attributes</short-title>
+			<keywords>Search Attributes</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-breadcrumb</portlet-name>
+		<display-name>archivemanager-breadcrumb</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.BreadcrumbPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Search Breadcrumb</title>
+			<short-title>Search Breadcrumb</short-title>
+			<keywords>Search Breadcrumb</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>archivemanager-digital-object</portlet-name>
+		<display-name>archivemanager-digital-object</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.search.DigitalObjectDisplayPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Digital Objects Display</title>
+			<short-title>Digital Objects Display</short-title>
+			<keywords>Digital Objects Display</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- APPS -->
+	<portlet>
+		<portlet-name>toolbar</portlet-name>
+		<display-name>ArchiveManager Toolbar</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.apps.ToolbarPortlet</portlet-class>
+    	<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+	      	<portlet-mode>edit</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Apps Toolbar</title>
+			<short-title>Apps Toolbar</short-title>
+			<keywords>Apps Toolbar</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>collections</portlet-name>
+		<display-name>ArchiveManager Collections</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.apps.CollectionManagerPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Collection Manager</title>
+			<short-title>Collection Manager</short-title>
+			<keywords>Collection Manager</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>data</portlet-name>
+		<display-name>ArchiveManager Data</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.apps.DataManagerPortlet</portlet-class>
+    	<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Data Manager</title>
+			<short-title>Data Manager</short-title>
+			<keywords>Data Manager</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+	</portlet>	
+	
+	<!-- DOCUMENTATION -->
+	<portlet>
+		<portlet-name>archivemanager-documentation</portlet-name>
+		<display-name>archivemanager-documentation</display-name>
+		<portlet-class>org.archivemanager.portal.portlet.DocumentationPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Documentation</title>
+			<short-title>Documentation</short-title>
+			<keywords>Documentation</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+</portlet-app>

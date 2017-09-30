@@ -1,0 +1,34 @@
+<style type="text/css">
+	body{margin:0px;}
+	.donorAddressPanel{margin-right:5px;}
+    .donorAddAddress{margin-right:5px;margin-top:3px;}
+    #loadingWrapper {position:absolute;top:25%;width:100%;text-align:center;z-index:900001;text-align:center;}
+    #loading {margin:0 auto;border:1px solid #ccc;width:235px;padding:2px;text-align:left;}
+    #loading a {color:#225588;}
+    #loading .loadingIndicator {background:white;padding:10px;margin:0;height:auto;color:#444;}
+    #loadingMsg {margin-left:35px;font:normal 10px arial, tahoma, sans-serif;}
+    #versionMsg{height:60px;margin-left:35px;font:bold 13px tahoma, arial, helvetica;}  
+</style>
+
+<script type="text/javascript">
+	var isomorphicDir = "/theme/sc/";
+	var service_path = '${serviceUrl}';
+</script>
+
+<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>	
+
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading Core API...';</script>
+<script src="/theme/sc/modules/ISC_Core.js"></script>
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading UI Components...';</script>
+<script src="/theme/sc/modules/ISC_Foundation.js"></script>
+<script src="/theme/sc/modules/ISC_Containers.js"></script>
+<script src="/theme/sc/modules/ISC_Grids.js"></script>
+<script src="/theme/sc/modules/ISC_Forms.js"></script>
+<script src="/theme/sc/modules/ISC_RichTextEditor.js"></script>
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading Data API...';</script>
+<script src="/theme/sc/modules/ISC_DataBinding.js"></script>
+<script src="/theme/sc/modules/ISC_Calendar.js"></script>
+<script src="/theme/sc/modules/ISC_Drawing.js"></script>
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading skin...';</script>
+<script type="text/javascript" src="/theme/sc/skins/Enterprise/load_skin.js?isc_version=10.0.js"></script>
+<script type="text/javascript">document.getElementById('loadingMsg').innerHTML = 'Loading Application...';</script>
