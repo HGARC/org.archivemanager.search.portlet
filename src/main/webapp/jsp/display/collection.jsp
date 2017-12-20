@@ -16,13 +16,6 @@
 				<c:out value="${result.scopeNote}" escapeXml="false" />
 			</div>
 		</div>
-		<!--
-		<div>
-			<div class="collection-detail-label">Biography:</div>
-			<div class="collection-detail-value">
-				<c:out value="${result.bioNote}" escapeXml="false" /></td>
-			</div>
-		</div>
-		-->
+
 	</div>
 </div>

@@ -40,7 +40,6 @@ import org.heed.openapps.entity.AssociationSorter;
 import org.heed.openapps.entity.Entity;
 import org.heed.openapps.entity.EntityQuery;
 import org.heed.openapps.entity.EntityResultSet;
-import org.heed.openapps.entity.ExportProcessor;
 import org.heed.openapps.entity.ImportProcessor;
 import org.heed.openapps.entity.InvalidAssociationException;
 import org.heed.openapps.entity.InvalidEntityException;
@@ -267,7 +266,7 @@ public class JsonCollectionController extends WebserviceSupport {
 	public RestResponse<Object> add(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		RestResponse<Object> data = new RestResponse<Object>();
 		String source = request.getParameter("source");
-		String sessionKey = request.getParameter("sessionKey");
+		String sessionKey = request.getSession().getId();
 		if(source != null) {
 			if(sessionKey != null && sessionKey.length() > 0) {
 				Entity root = entityCache.get(sessionKey);
@@ -297,17 +296,71 @@ public class JsonCollectionController extends WebserviceSupport {
 							count++;
 						}
 					} else {
+						Map<String,Long> idMap = new HashMap<String,Long>();
 						Entity collection = getEntityService().getEntity(null, Long.valueOf(source));				
-						getEntityService().addEntity(root);
+						//getEntityService().addEntity(root);
 						ImportProcessor parser = parserCache.get(sessionKey);
 						Collection<Entity> entities = parser.getEntities().values();
-						getEntityService().addEntities(entities);
-						Association assoc = new AssociationImpl(RepositoryModel.CATEGORIES, collection.getId(), root.getId());
-						getEntityService().addAssociation(assoc);
-						root.setName(root.getPropertyValue(SystemModel.NAME) + "(import)");
-						getEntityService().updateEntity(root);
-						ExportProcessor processor = getEntityService().getExportProcessor(root.getQName().toString());
-						data.getResponse().getData().add(processor.export(new FormatInstructions(true), assoc));
+						int i = 0;
+						for(Entity entity : entities) {
+							if(entity.getName() != null) {
+								getEntityService().addEntity(entity);
+								if(entity.getQName().equals(RepositoryModel.CATEGORY) && entity.getTargetAssociations().size() == 0) {
+									Association assoc = new AssociationImpl(RepositoryModel.CATEGORIES, collection.getId(), entity.getId());
+									collection.getSourceAssociations().add(assoc);
+									entity.getTargetAssociations().add(assoc);
+								}
+								i++;
+								System.out.println("added "+i+" of "+entities.size()+" entities.");
+							}
+						}
+						i = 0;
+						for(Entity entity : entities) {	    		
+							List<Association> sourceAssociations = entity.getSourceAssociations();
+							for(Association assoc : sourceAssociations) {		    				
+								try	{
+									//String qname = assoc.getQName().toString();
+									Long sourceid = entity.getId();
+									Long targetid = assoc.getTarget();
+									if(targetid == null) targetid = idMap.get(assoc.getTargetUid());
+									if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
+									if(targetid == 0) targetid = assoc.getTargetEntity().getId();
+									if(sourceid != null && targetid != null) {
+										Association a = new AssociationImpl(assoc.getQName());
+										a.setSource(sourceid);
+										a.setTarget(targetid);
+										getEntityService().addAssociation(a);
+									} else {
+										System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
+									}
+								} catch(Exception e) {
+									e.printStackTrace();
+								}
+							}
+							List<Association> targetAssociations = entity.getTargetAssociations();
+							for(Association assoc : targetAssociations) {		    				
+								try	{
+									//String qname = assoc.getQName().toString();
+									Long sourceid = assoc.getSource();
+									Long targetid = entity.getId();
+									if(sourceid == null) sourceid = idMap.get(assoc.getSourceUid());
+									if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
+									if(targetid == 0) targetid = assoc.getTargetEntity().getId();
+									if(sourceid != null && targetid != null) {
+										Association a = new AssociationImpl(assoc.getQName());
+										a.setSource(sourceid);
+										a.setTarget(targetid);
+										getEntityService().addAssociation(a);
+									} else {
+										System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
+									}
+								} catch(Exception e) {
+									e.printStackTrace();
+								}
+							}
+							i++;
+							System.out.println(i+" of "+entities.size()+" nodes relationships migrated");
+						}
 					}
 				}
 			} else {
@@ -425,7 +478,7 @@ public class JsonCollectionController extends WebserviceSupport {
 	@RequestMapping(value="/collection/import/upload.json", method = RequestMethod.POST)
 	public ModelAndView upload(HttpServletRequest req, HttpServletResponse res) throws Exception {
 		String mode = null;
-		String sessionKey = "";
+		String sessionKey = req.getSession().getId();
 		try {
 			// Create a new file upload handler
 			ServletFileUpload upload = new ServletFileUpload();
@@ -445,7 +498,6 @@ public class JsonCollectionController extends WebserviceSupport {
 			    FileImportProcessor parser = mode != null ? (FileImportProcessor)getEntityService().getImportProcessors(mode).get(0) : null;
 				if(parser != null && file != null) {
 					parser.process(new ByteArrayInputStream(file), null);
-					sessionKey = java.util.UUID.randomUUID().toString();
 					entityCache.put(sessionKey, parser.getRoot());
 					parserCache.put(sessionKey, parser);
 				}
@@ -459,9 +511,10 @@ public class JsonCollectionController extends WebserviceSupport {
 	}
 	@ResponseBody
 	@RequestMapping(value="/collection/import/fetch.json", method = RequestMethod.GET)
-	public RestResponse<Object> fetch(HttpServletRequest req, HttpServletResponse res, @RequestParam("session") String sessionKey) throws Exception {
+	public RestResponse<Object> fetch(HttpServletRequest req, HttpServletResponse res) throws Exception {
 		RestResponse<Object> data = new RestResponse<Object>();
 		String source = req.getParameter("source");
+		String sessionKey = req.getSession().getId();
 		ImportProcessor parser = parserCache.get(sessionKey);
 		if(parser != null) {
 			if(source == null || source.equals("nodes")) {

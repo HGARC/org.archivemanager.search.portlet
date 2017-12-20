@@ -123,31 +123,31 @@ public class SearchPortlet extends PortletSupport {
 			if(view.equals("gallery1.jsp")) {			
 				renderRequest.setAttribute("query", query);
 				if(query == null || query.length() == 0) query = "all results";
-				results = searchLocal(renderRequest, "item", code, query, Integer.valueOf(page), null, 100, targets, sources);
+				results = searchLocal(renderRequest, "item", code, id, query, Integer.valueOf(page), null, 100, targets, sources);
 			} else if(view.equals("gallery2.jsp")) {			
 				renderRequest.setAttribute("query", query);
 				if(query == null || query.length() == 0) query = "all results";
 				try {
 					List<Collection> collections = collectionNav(renderRequest);
 					renderRequest.setAttribute("collections", collections);			
-					results = searchLocal(renderRequest, "item", code, query, Integer.valueOf(page), null, 100, targets, sources);
+					results = searchLocal(renderRequest, "item", code, id, query, Integer.valueOf(page), null, 100, targets, sources);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}		
 			} else if(view.equals("videos.jsp")) {			
 				if(query == null || query.length() == 0) query = "all results";
-				results = searchLocal(renderRequest, "item", code, query, Integer.valueOf(page), new String[]{"date_expression_"}, 9, targets, true);
+				results = searchLocal(renderRequest, "item", code, id, query, Integer.valueOf(page), new String[]{"date_expression_"}, 9, targets, true);
 			
 			} else if(view.equals("collections.jsp")) {
 				if(query == null || query.length() == 0) query = "all results";
-				results = searchLocal(renderRequest, "collection", code, query.toLowerCase(), Integer.valueOf(page), new String[]{sort}, Integer.valueOf(size), targets, sources);	
+				results = searchLocal(renderRequest, "collection", code, id, query.toLowerCase(), Integer.valueOf(page), new String[]{sort}, Integer.valueOf(size), targets, sources);	
 				
 			} else if(view.equals("archive_results.jsp")) {
-				results = searchLocal(renderRequest, "archive", null, query, Integer.valueOf(page), new String[]{"sort_","relevance","name_e"}, Integer.valueOf(size), targets, sources);
+				results = searchLocal(renderRequest, "archive", null, id, query, Integer.valueOf(page), new String[]{"sort_","relevance","name_e"}, Integer.valueOf(size), targets, sources);
 			
 			} else if(view.equals("notable_figures_entries.jsp")) {
 				if(query == null || query.length() == 0) query = "all results";
-				results = searchLocal(renderRequest, "entry", null, query.toLowerCase(), Integer.valueOf(page), new String[]{"name_e"}, Integer.valueOf(size), true, sources);	
+				results = searchLocal(renderRequest, "entry", null, id, query.toLowerCase(), Integer.valueOf(page), new String[]{"name_e"}, Integer.valueOf(size), true, sources);	
 			} else if(view.equals("series.jsp")) {
 				try {
 					List<Collection> collections = collections(renderRequest);
@@ -176,7 +176,7 @@ public class SearchPortlet extends PortletSupport {
 					e.printStackTrace();
 				} 
 			} else {
-				if(id != null && !query.contains("source_assoc:"+id)) {
+				if(!code.equals("id") && id != null && !query.contains("source_assoc:"+id)) {
 					query += " source_assoc:"+id;
 				}
 				if(id != null && id.length() > 0) {				
@@ -186,7 +186,7 @@ public class SearchPortlet extends PortletSupport {
 				}			
 				if(!query.equals("") || displayAllResults) {
 					renderRequest.getPortletSession().setAttribute("LIFERAY_SHARED_QUERY", query, PortletSession.APPLICATION_SCOPE);
-					results = searchLocal(renderRequest, "item", code, query.trim(), Integer.valueOf(page), new String[]{sort}, Integer.valueOf(size), targets, sources);
+					results = searchLocal(renderRequest, "item", code, id, query.trim(), Integer.valueOf(page), new String[]{sort}, Integer.valueOf(size), targets, sources);
 					//results.setBaseUrl(themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf("?")));					
 					//populateWebContent(renderRequest, code);
 				}
@@ -211,7 +211,7 @@ public class SearchPortlet extends PortletSupport {
 		return results;
 	}
 	@SuppressWarnings("unchecked")
-	protected ResultSet searchLocal(RenderRequest renderRequest, String type, String code, String query, int page, String[] sorts, int size, boolean targets, boolean sources) throws IOException {
+	protected ResultSet searchLocal(RenderRequest renderRequest, String type, String code, String id, String query, int page, String[] sorts, int size, boolean targets, boolean sources) throws IOException {
 		HttpServletRequest httpReq = PortalUtil.getHttpServletRequest(renderRequest);
 		HttpServletRequest httpReq2 = PortalUtil.getOriginalServletRequest(httpReq);		
 		User user = getSecurityService().getCurrentUser(httpReq2);
@@ -239,21 +239,25 @@ public class SearchPortlet extends PortletSupport {
 				searchRequest = getSearchRequest(RepositoryModel.ITEM, query, start, end, sorts, false);
 			}
 			if(code != null && code.length() > 0) {
-				EntityQuery collectionQuery = new EntityQuery(RepositoryModel.COLLECTION);
-				collectionQuery.setType(EntityQuery.TYPE_LUCENE_TEXT);
-				collectionQuery.getProperties().add(new Property(RepositoryModel.CODE, code));
-				EntityResultSet<Entity> collectionResults = getEntityService().search(collectionQuery);
-				if(collectionResults.getResults().size() == 1) {
-					Entity collection = collectionResults.getResults().get(0);
-					searchRequest.addParameter("path", String.valueOf(collection.getId()));
-				} else if(collectionResults.getResults().size() > 1) {
-					Clause clause = new Clause();
-					clause.setOperator(Clause.OPERATOR_OR);
-					for(Entity collection : collectionResults.getResults()) {
-						clause.addParamater(new Parameter("path", String.valueOf(collection.getId())));
-						//searchRequest.setCollection(collection.getId());
+				if(code.equals("id")) {
+					searchRequest.addParameter("path", id);
+				} else {
+					EntityQuery collectionQuery = new EntityQuery(RepositoryModel.COLLECTION);
+					collectionQuery.setType(EntityQuery.TYPE_LUCENE_TEXT);
+					collectionQuery.getProperties().add(new Property(RepositoryModel.CODE, code));
+					EntityResultSet<Entity> collectionResults = getEntityService().search(collectionQuery);
+					if(collectionResults.getResults().size() == 1) {
+						Entity collection = collectionResults.getResults().get(0);
+						searchRequest.addParameter("path", String.valueOf(collection.getId()));
+					} else if(collectionResults.getResults().size() > 1) {
+						Clause clause = new Clause();
+						clause.setOperator(Clause.OPERATOR_OR);
+						for(Entity collection : collectionResults.getResults()) {
+							clause.addParamater(new Parameter("path", String.valueOf(collection.getId())));
+							//searchRequest.setCollection(collection.getId());
+						}
+						searchRequest.addClause(clause);
 					}
-					searchRequest.addClause(clause);
 				}
 			}
 		}

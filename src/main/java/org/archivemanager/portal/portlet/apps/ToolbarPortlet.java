@@ -34,9 +34,15 @@ public class ToolbarPortlet extends PortletSupport {
 		renderRequest.setAttribute("isSignedIn", themeDisplay.isSignedIn());
 		String id = httpReq2.getParameter("id");
 		try {
+			Entity entity = getEntityService().getEntity(null, Long.valueOf(id));
+			if(entity.getQName().equals(RepositoryModel.COLLECTION) && entity.getSourceAssociations().size() > 0) {
+				renderRequest.setAttribute("searchable", true);				
+			}
 			renderRequest.setAttribute("entityId", id);
 			if(themeDisplay.isSignedIn() && (isArchivist(user) || isAdministrator(user)) && id != null && id.length() > 0) {				
 				include("/jsp/apps/toolbar.jsp", renderRequest, renderResponse);		
+			} else {
+				include("/jsp/apps/toolbar_anon.jsp", renderRequest, renderResponse);
 			}
 		} catch(Exception e) {
 			throw new PortletException("", e);
