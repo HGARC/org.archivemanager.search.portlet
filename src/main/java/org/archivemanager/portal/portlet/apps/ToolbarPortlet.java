@@ -1,4 +1,5 @@
 package org.archivemanager.portal.portlet.apps;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +35,11 @@ public class ToolbarPortlet extends PortletSupport {
 		renderRequest.setAttribute("isSignedIn", themeDisplay.isSignedIn());
 		String id = httpReq2.getParameter("id");
 		try {
+			String dirStr = System.getProperty( "catalina.base" )+"/webapps/finding-aid";
+			File pdf = new File(dirStr+"/finding_aid_"+id+".pdf");
+			if(pdf.exists()) 
+				renderRequest.setAttribute("findingAid", "\\finding-aid\\finding_aid_"+id+".pdf");
+			
 			Entity entity = getEntityService().getEntity(null, Long.valueOf(id));
 			if(entity.getQName().equals(RepositoryModel.COLLECTION) && entity.getSourceAssociations().size() > 0) {
 				renderRequest.setAttribute("searchable", true);				

@@ -12,12 +12,6 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
 
-<liferay-portlet:renderURL portletName="collections_WAR_archivemanagersearchportlet" windowState="<%=WindowState.MAXIMIZED.toString() %>" var="editorUrl">
-	<portlet:param name="goto" value="IpByHourPage"/>
-</liferay-portlet:renderURL>
-<liferay-portlet:renderURL portletName="data_WAR_archivemanagersearchportlet" windowState="<%=WindowState.MAXIMIZED.toString() %>" var="dataUrl">
-	<portlet:param name="goto" value="IpByHourPage"/>
-</liferay-portlet:renderURL>
 <style>
 	.am-toolbar{width:90%;height:50px;margin:10px;padding:10px;border:1px solid #EEEEEE;}
 	.am-icon{float:right;margin-right:9px;}
@@ -32,18 +26,6 @@
 		</div>
 	</a>
 	</c:if>	
-	<a style="float:left;" href="${editorUrl}&entityId=<c:out value="${entityId}" />">
-		<div style="width:50px;margin-right: 10px;">
-			<img class="am-icon" src="/theme/images/icons32/file_manager.png" />
-			<div style="width:50px;font-size:10px;text-align:center;line-height:12px;">Edit Collection</div>
-		</div>
-	</a>
-	<a style="float:left;" href="${dataUrl}">
-		<div style="width:50px;margin-right: 10px;">
-			<img class="am-icon" src="/theme/images/icons32/database.png" />
-			<div style="width:50px;font-size:10px;text-align:center;line-height:12px;">Manage Data</div>
-		</div>
-	</a>
 </div>
 <c:if test="${not empty findingAid}">
 <div>

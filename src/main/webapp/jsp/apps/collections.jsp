@@ -73,7 +73,7 @@
     
     var image_relationships = {'':'','avatar':'Avatar','gallery':'Gallery','rendition':'Rendition','thumbnail':'Thumbnail'};
      
-    var weblink_types = {'avatar':'Avatar','rendition':'Rendition','navigation':'Navigation','partner':'Partner','zoomify':'Zoomify','flippingbook':'Flipping Book'};
+    var weblink_types = {'avatar':'Avatar','rendition':'Rendition','navigation':'Navigation','partner':'Partner','zoomify':'Zoomify','finding_aid':'Finding Aid','flippingbook':'Flipping Book'};
     var webcontent_types = {'partnership':'Partnership','body':'Body'};
     
     var collection_task_types = {'General':'General'};
