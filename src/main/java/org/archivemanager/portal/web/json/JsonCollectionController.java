@@ -267,119 +267,115 @@ public class JsonCollectionController extends WebserviceSupport {
 		RestResponse<Object> data = new RestResponse<Object>();
 		String source = request.getParameter("source");
 		String sessionKey = request.getSession().getId();
-		if(source != null) {
-			if(sessionKey != null && sessionKey.length() > 0) {
-				Entity root = entityCache.get(sessionKey);
-				if(root != null) {
-					if(root.getQName().equals(RepositoryModel.COLLECTION)) {
-						ImportProcessor parser = parserCache.get(sessionKey);
-						Collection<Entity> entities = parser.getEntities().values();
-						List<Association> associations = new ArrayList<Association>();
-						int count = 1;
-						for(Entity entity : entities) {
-							associations.addAll(entity.getSourceAssociations());
-							associations.addAll(entity.getTargetAssociations());
-							entity.getSourceAssociations().clear();
-							entity.getTargetAssociations().clear();
-							getEntityService().addEntity(entity);
-							System.out.println("processed "+count+" of "+entities.size()+" entities");
-							count++;
-						}
-						count = 0;
-						for(Association association : associations) {
-							Entity sourceEntity = parser.getEntities().get(association.getSourceUid());
-							Entity targetEntity = parser.getEntities().get(association.getTargetUid());
-							Association assoc = getEntityService().getAssociation(association.getQName(), sourceEntity.getId(), targetEntity.getId());
-							if(assoc.getId() == null) getEntityService().addAssociation(assoc);
-							else getEntityService().updateAssociation(assoc);
-							System.out.println("processed "+count+" of "+parser.getAssociations().size()+" associations");
-							count++;
-						}
-					} else {
-						Map<String,Long> idMap = new HashMap<String,Long>();
-						Entity collection = getEntityService().getEntity(null, Long.valueOf(source));				
-						//getEntityService().addEntity(root);
-						ImportProcessor parser = parserCache.get(sessionKey);
-						Collection<Entity> entities = parser.getEntities().values();
-						int i = 0;
-						for(Entity entity : entities) {
-							if(entity.getName() != null) {
-								getEntityService().addEntity(entity);
-								if(entity.getQName().equals(RepositoryModel.CATEGORY) && entity.getTargetAssociations().size() == 0) {
-									Association assoc = new AssociationImpl(RepositoryModel.CATEGORIES, collection.getId(), entity.getId());
-									collection.getSourceAssociations().add(assoc);
-									entity.getTargetAssociations().add(assoc);
-								}
-								i++;
-								System.out.println("added "+i+" of "+entities.size()+" entities.");
-							}
-						}
-						i = 0;
-						for(Entity entity : entities) {	    		
-							List<Association> sourceAssociations = entity.getSourceAssociations();
-							for(Association assoc : sourceAssociations) {		    				
-								try	{
-									//String qname = assoc.getQName().toString();
-									Long sourceid = entity.getId();
-									Long targetid = assoc.getTarget();
-									if(targetid == null) targetid = idMap.get(assoc.getTargetUid());
-									if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
-									if(targetid == 0) targetid = assoc.getTargetEntity().getId();
-									if(sourceid != null && targetid != null) {
-										Association a = new AssociationImpl(assoc.getQName());
-										a.setSource(sourceid);
-										a.setTarget(targetid);
-										getEntityService().addAssociation(a);
-									} else {
-										System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
-									}
-								} catch(Exception e) {
-									e.printStackTrace();
-								}
-							}
-							List<Association> targetAssociations = entity.getTargetAssociations();
-							for(Association assoc : targetAssociations) {		    				
-								try	{
-									//String qname = assoc.getQName().toString();
-									Long sourceid = assoc.getSource();
-									Long targetid = entity.getId();
-									if(sourceid == null) sourceid = idMap.get(assoc.getSourceUid());
-									if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
-									if(targetid == 0) targetid = assoc.getTargetEntity().getId();
-									if(sourceid != null && targetid != null) {
-										Association a = new AssociationImpl(assoc.getQName());
-										a.setSource(sourceid);
-										a.setTarget(targetid);
-										getEntityService().addAssociation(a);
-									} else {
-										System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
-									}
-								} catch(Exception e) {
-									e.printStackTrace();
-								}
-							}
-							i++;
-							System.out.println(i+" of "+entities.size()+" nodes relationships migrated");
-						}
-					}
+		Entity root = entityCache.get(sessionKey);
+		if(root != null) {
+			if(root.getQName().equals(RepositoryModel.COLLECTION)) {
+				ImportProcessor parser = parserCache.get(sessionKey);
+				Collection<Entity> entities = parser.getEntities().values();
+				List<Association> associations = new ArrayList<Association>();
+				int count = 1;
+				for(Entity entity : entities) {
+					associations.addAll(entity.getSourceAssociations());
+					associations.addAll(entity.getTargetAssociations());
+					entity.getSourceAssociations().clear();
+					entity.getTargetAssociations().clear();
+					getEntityService().addEntity(entity);
+					System.out.println("processed "+count+" of "+entities.size()+" entities");
+					count++;
+				}
+				count = 0;
+				for(Association association : associations) {
+					Entity sourceEntity = parser.getEntities().get(association.getSourceUid());
+					Entity targetEntity = parser.getEntities().get(association.getTargetUid());
+					Association assoc = getEntityService().getAssociation(association.getQName(), sourceEntity.getId(), targetEntity.getId());
+					if(assoc.getId() == null) getEntityService().addAssociation(assoc);
+					else getEntityService().updateAssociation(assoc);
+					System.out.println("processed "+count+" of "+parser.getAssociations().size()+" associations");
+					count++;
 				}
 			} else {
-				String assocQname = request.getParameter("assoc_qname");
-				String entityQname = request.getParameter("entity_qname");
-				QName aQname = QName.createQualifiedName(assocQname);
-				QName eQname = QName.createQualifiedName(entityQname);
-				Entity entity = getEntityService().getEntity(request, eQname);
-				ValidationResult entityResult = getEntityService().validate(entity);
-				if(entityResult.isValid()) {
-					if(entity.getId() > 0) {
-						getEntityService().updateEntity(entity);
-						getSearchService().update(entity, false);
-					} else {
-						getEntityService().addEntity(Long.valueOf(source), null, aQname, null, entity);
-						getSearchService().update(entity, false);
+				Map<String,Long> idMap = new HashMap<String,Long>();
+				Entity collection = getEntityService().getEntity(null, Long.valueOf(source));				
+				//getEntityService().addEntity(root);
+				ImportProcessor parser = parserCache.get(sessionKey);
+				Collection<Entity> entities = parser.getEntities().values();
+				int i = 0;
+				for(Entity entity : entities) {
+					if(entity.getName() != null) {
+						getEntityService().addEntity(entity);
+						if(entity.getQName().equals(RepositoryModel.CATEGORY) && entity.getTargetAssociations().size() == 0) {
+							Association assoc = new AssociationImpl(RepositoryModel.CATEGORIES, collection.getId(), entity.getId());
+							collection.getSourceAssociations().add(assoc);
+							entity.getTargetAssociations().add(assoc);
+						}
+						i++;
+						System.out.println("added "+i+" of "+entities.size()+" entities.");
 					}
-					data.getResponse().getData().add(getNodeData(String.valueOf(entity.getId()), source, entity.getName(), entity.getQName().toString(), entity.getQName().getLocalName()));
 				}
+				i = 0;
+				for(Entity entity : entities) {	    		
+					List<Association> sourceAssociations = entity.getSourceAssociations();
+					for(Association assoc : sourceAssociations) {		    				
+						try	{
+							//String qname = assoc.getQName().toString();
+							Long sourceid = entity.getId();
+							Long targetid = assoc.getTarget();
+							if(targetid == null) targetid = idMap.get(assoc.getTargetUid());
+							if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
+							if(targetid == 0) targetid = assoc.getTargetEntity().getId();
+							if(sourceid != null && targetid != null) {
+								Association a = new AssociationImpl(assoc.getQName());
+								a.setSource(sourceid);
+								a.setTarget(targetid);
+								getEntityService().addAssociation(a);
+							} else {
+								System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
+							}
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+					List<Association> targetAssociations = entity.getTargetAssociations();
+					for(Association assoc : targetAssociations) {		    				
+						try	{
+							//String qname = assoc.getQName().toString();
+							Long sourceid = assoc.getSource();
+							Long targetid = entity.getId();
+							if(sourceid == null) sourceid = idMap.get(assoc.getSourceUid());
+							if(sourceid == 0) sourceid = assoc.getSourceEntity().getId();
+							if(targetid == 0) targetid = assoc.getTargetEntity().getId();
+							if(sourceid != null && targetid != null) {
+								Association a = new AssociationImpl(assoc.getQName());
+								a.setSource(sourceid);
+								a.setTarget(targetid);
+								getEntityService().addAssociation(a);
+							} else {
+								System.out.println("bad news on id lookup:"+sourceid+" to "+targetid);
+							}
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+					i++;
+					System.out.println(i+" of "+entities.size()+" nodes relationships migrated");
+				}
+			}
+		} else if(source != null) {
+			String assocQname = request.getParameter("assoc_qname");
+			String entityQname = request.getParameter("entity_qname");
+			QName aQname = QName.createQualifiedName(assocQname);
+			QName eQname = QName.createQualifiedName(entityQname);
+			Entity entity = getEntityService().getEntity(request, eQname);
+			ValidationResult entityResult = getEntityService().validate(entity);
+			if(entityResult.isValid()) {
+				if(entity.getId() > 0) {
+					getEntityService().updateEntity(entity);
+					getSearchService().update(entity, false);
+				} else {
+					getEntityService().addEntity(Long.valueOf(source), null, aQname, null, entity);
+					getSearchService().update(entity, false);
+				}
+				data.getResponse().getData().add(getNodeData(String.valueOf(entity.getId()), source, entity.getName(), entity.getQName().toString(), entity.getQName().getLocalName()));
 			}
 		} else {
 			String qnameStr = request.getParameter("qname");
