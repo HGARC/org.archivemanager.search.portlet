@@ -25,14 +25,12 @@
 
 <div class="am-toolbar">
 	<c:if test="${searchable}">	
-	<!--
 	<a style="float:left;" href="/collections/collection/search?id=<c:out value="${entityId}" />">
 		<div style="width:50px;margin-right: 10px;">
 			<img class="am-icon" src="/theme/images/icons32/zoom.png" />
 			<div style="width:50px;font-size:10px;text-align:center;line-height:12px;">Search Collection</div>
 		</div>
 	</a>
-	-->
 	</c:if>	
 	<a style="float:left;" href="${editorUrl}&entityId=<c:out value="${entityId}" />">
 		<div style="width:50px;margin-right: 10px;">

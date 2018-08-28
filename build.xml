@@ -1,10 +1,10 @@
 <project name="org.archivemanager.search.portlet" basedir="." default="build-deploy">
-	<property name="deploy.dirs" value="Y:/BUPortal/deploy,C:/build" />
+	<property name="deploy.dirs" value="C:/opt/apps/BUPortal,C:/opt/build" />
 	<property name="module.version" value="3.0.0" />
 	<property name="dist.dir" value="target" />
-	<property name="modules.dir" value="/opt/programming/ArchiveManager/portal/3.0" />
+	<property name="modules.dir" value="/opt/programming/ArchiveManagerPortal/modules" />
 	
-	<import file="../../build-common.xml"/>
+	<import file="../build-common.xml"/>
 	
 	<target name="copy-dependencies">
 		<condition property="maven.repo.local" value="${maven.repo.local}" else="${user.home}/.m2/repository">
@@ -18,7 +18,6 @@
 		<antcall target="deploy" />
 	</target>
 	<target name="deploy" depends="mvn package">
-		<copy todir="../../../dist" file="./target/archivemanager-search-portlet-3.0.0.war" />
 		<for list="${deploy.dirs}" param="dir">
 			<sequential>
 				<copy todir="@{dir}" file="./target/archivemanager-search-portlet-3.0.0.war" />

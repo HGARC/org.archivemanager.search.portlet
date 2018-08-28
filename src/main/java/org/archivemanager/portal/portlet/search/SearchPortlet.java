@@ -94,8 +94,10 @@ public class SearchPortlet extends PortletSupport {
 		//String currentUrl = themeDisplay.getURLCurrent();
 		String query = httpReq2.getParameter("query") != null ? httpReq2.getParameter("query") : "";
 		String page = httpReq2.getParameter("page") != null ? httpReq2.getParameter("page") : "1";
-		if(httpReq2.getParameter("sort") != null) sort = httpReq2.getParameter("sort");
-		if(httpReq2.getParameter("size") != null) size = httpReq2.getParameter("size");
+		if(httpReq2.getParameter("sort") != null && httpReq2.getParameter("sort").length() > 0) 
+			sort = httpReq2.getParameter("sort");
+		if(httpReq2.getParameter("size") != null && httpReq2.getParameter("size").length() > 0) 
+			size = httpReq2.getParameter("size");
 		boolean sources = httpReq2.getParameter("sources") != null ? Boolean.valueOf(httpReq2.getParameter("sources")) : false;
 		boolean targets = httpReq2.getParameter("targets") != null ? Boolean.valueOf(httpReq2.getParameter("targets")) : false;
 		String id = httpReq2.getParameter("id");
@@ -116,6 +118,8 @@ public class SearchPortlet extends PortletSupport {
 		renderRequest.setAttribute("language", displayLanguage);
 		renderRequest.setAttribute("detailPage", detailPage);
 		renderRequest.setAttribute("maxFieldSize", maxFieldSize+"px");
+		renderRequest.setAttribute("sort", sort);
+		renderRequest.setAttribute("size", size);
 		
 		ResultSet results = null;
 		
@@ -180,10 +184,10 @@ public class SearchPortlet extends PortletSupport {
 					query += " source_assoc:"+id;
 				}
 				if(id != null && id.length() > 0) {				
-					renderRequest.setAttribute("baseUrl", "?id="+id+"&");
+					renderRequest.setAttribute("baseUrl", "?id="+id);
 				} else {
 					renderRequest.setAttribute("baseUrl", "");
-				}			
+				}				
 				if(!query.equals("") || displayAllResults) {
 					renderRequest.getPortletSession().setAttribute("LIFERAY_SHARED_QUERY", query, PortletSession.APPLICATION_SCOPE);
 					results = searchLocal(renderRequest, "item", code, id, query.trim(), Integer.valueOf(page), new String[]{sort}, Integer.valueOf(size), targets, sources);
@@ -334,7 +338,7 @@ public class SearchPortlet extends PortletSupport {
 						results.getAttributes().add(attribute);
 					}
 				}
-				if(!searchResponse.getBreadcrumb().isEmpty()) {
+				if(searchResponse.getBreadcrumb() != null && !searchResponse.getBreadcrumb().isEmpty()) {
 					for(SearchNode crumbNode : searchResponse.getBreadcrumb()) {
 						String pageQuery = crumbNode.getQuery().replace("//",  "/").trim();
 						if(crumbNode.getLabel() != null) {

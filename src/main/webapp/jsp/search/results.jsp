@@ -5,9 +5,28 @@
 
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
-
+<script>
+$(document).ready(function() { 
+	$('#collectionQuery').bind('keypress', function (e) {
+	    var code = e.keyCode || e.which;
+	 	if(code == 13) {
+	   		search();
+	 	}
+	});
+});
+function search() {
+	var query = $('#collectionQuery').val();
+	document.location = '<c:out value="${baseUrl}" />&query='+query+'&size=<c:out value="${size}" />';
+}
+</script>
 <div id="search-results">
 	<table style="width:100%;">
+		<tr>
+			<td>
+				<input id="collectionQuery" class="searchtext1" name="query" type="text" style="margin-bottom:0px;" />
+				<input type="button" value="SEARCH" onclick="search();" />
+			</td>
+		</tr>
 		<c:if test="${empty resultset.results}">
 			<tr><td style="height:500px;"><b>No results were found, please try again</b></td></tr>
 		</c:if>
@@ -26,21 +45,21 @@
 									<b>10</b>
 								</c:if>
 								<c:if test="${resultset.pageSize != 10}">
-									<a href="?<c:out value="${resultset.query}" />&size=10">10</a>
+									<a href="<c:out value="${baseUrl}" />&<c:out value="${resultset.query}" />&size=10">10</a>
 								</c:if>
 								&nbsp;
 								<c:if test="${resultset.pageSize == 25}">
 									<b>25</b>
 								</c:if>
 								<c:if test="${resultset.pageSize != 25}">
-									<a href="?<c:out value="${resultset.query}" />&size=25">25</a>
+									<a href="<c:out value="${baseUrl}" />&<c:out value="${resultset.query}" />&size=25">25</a>
 								</c:if>
 								&nbsp;
 								<c:if test="${resultset.pageSize == 50}">
 									<b>50</b>
 								</c:if>
 								<c:if test="${resultset.pageSize != 50}">
-									<a href="?<c:out value="${resultset.query}" />&size=50">50</a>
+									<a href="<c:out value="${baseUrl}" />&<c:out value="${resultset.query}" />&size=50">50</a>
 								</c:if>
 							</td>						
 						</tr>
@@ -125,7 +144,7 @@
 										<b><c:out value="${page.name}" /></b>
 									</c:when>
 									<c:otherwise>
-										<a href="<c:out value="${baseUrl}" />?<c:out value="${page.query}" />"><c:out value="${page.name}" /></a>
+										<a href="<c:out value="${baseUrl}" />&<c:out value="${page.query}" />"><c:out value="${page.name}" /></a>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>	

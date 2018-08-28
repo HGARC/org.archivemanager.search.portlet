@@ -1,5 +1,6 @@
 package org.archivemanager.portal.web.json;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -490,13 +491,13 @@ public class JsonCollectionController extends WebserviceSupport {
 			    	//System.out.println("Form field " + name + " with value " + Streams.asString(tmpStream) + " detected.");
 			    } else {
 			    	file = IOUtils.toByteArray(stream);
-			    }
-			    FileImportProcessor parser = mode != null ? (FileImportProcessor)getEntityService().getImportProcessors(mode).get(0) : null;
-				if(parser != null && file != null) {
-					parser.process(new ByteArrayInputStream(file), null);
-					entityCache.put(sessionKey, parser.getRoot());
-					parserCache.put(sessionKey, parser);
-				}
+			    }			    
+			}
+			FileImportProcessor parser = mode != null ? (FileImportProcessor)getEntityService().getImportProcessors(mode).get(0) : null;
+			if(parser != null && file != null) {
+				parser.process(new ByteArrayInputStream(file), null);
+				entityCache.put(sessionKey, parser.getRoot());
+				parserCache.put(sessionKey, parser);
 			}
 		} catch(FileUploadException e) {
 			e.printStackTrace();
@@ -568,6 +569,15 @@ public class JsonCollectionController extends WebserviceSupport {
 		return data;
 	}
 	
+	@RequestMapping(method = RequestMethod.OPTIONS)
+	public HttpServletResponse handle(HttpServletResponse theHttpServletResponse) throws IOException {
+		theHttpServletResponse.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
+	    theHttpServletResponse.addHeader("Access-Control-Max-Age", "60"); 
+	    theHttpServletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+	    theHttpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+	    return theHttpServletResponse;
+	}
+	 
 	protected void printNodeTaxonomy(List<Object> list, String parent, Entity node, ImportProcessor parser) throws InvalidEntityException {
 		Map<String,Object> entityMap = new HashMap<String,Object>();
 		entityMap.put("id", node.getUid());

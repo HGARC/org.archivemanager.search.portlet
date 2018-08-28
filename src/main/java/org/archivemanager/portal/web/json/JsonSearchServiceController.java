@@ -74,6 +74,7 @@ public class JsonSearchServiceController extends WebserviceSupport {
 		
 		if(attributes != null && attributes.equals("true"))
 			searchRequest.setAttributes(true);
+		else searchRequest.setAttributes(false);
 		searchRequest.setUser(user);
 		
 		SearchResponse result = getSearchService().search(searchRequest);
